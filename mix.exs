@@ -24,7 +24,8 @@ defmodule WpXmlrpcry.MixProject do
   defp deps do
     [
       {:poolboy, "~> 1.5"},
-      {:progress_bar, "> 0.0.0"}
+      {:progress_bar, "> 0.0.0"},
+      {:httpoison, "~> 1.8"}
     ]
   end
 end

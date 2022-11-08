@@ -7,7 +7,9 @@ defmodule WpXmlrpcry.Progress do
     ProgressBar.render(finished, total, format())
 
     finished = receive do
-      _url -> finished + 1
+      _url_statistics ->
+        # TODO: send results to centralized "writer of results"
+        finished + 1
     end
 
     notify_progress(finished, total)
