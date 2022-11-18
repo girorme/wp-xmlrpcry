@@ -1,5 +1,5 @@
 defmodule WpXmlrpcry do
-  alias WpXmlrpcry.{Options, Progress, Worker, Util}
+  alias WpXmlrpcry.{Progress, Worker, Util}
   #require Reporter
 
   def main(args) do
@@ -29,6 +29,8 @@ defmodule WpXmlrpcry do
       timeout: :infinity,
       ordered: false
     ) |> Stream.run()
+
+    # Collect results and show to user
   end
 
   defp parse_args(args) do
@@ -49,7 +51,6 @@ defmodule WpXmlrpcry do
 
   defp missing_main_args(args) do
     [args[:urls], args[:users], args[:wordlist]]
-    |> Enum.map(&is_nil/1)
-    |> Enum.any?
+    |> Enum.any?(&(is_nil(&1)))
   end
 end
