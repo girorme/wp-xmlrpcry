@@ -1,12 +1,12 @@
 defmodule WpXmlrpcry.Worker do
 
-  alias WpXmlrpcry.{Http, Report}
+  alias WpXmlrpcry.{Http, Report, Util}
 
   @pattern ~r/isAdmin/i
 
   def start(progress_channel, [url: url, users: users, wordlist: wordlist]) do
     result =
-      combine_user_pass(users, wordlist)
+      Util.combine_user_pass(users, wordlist)
       |> do_login(url, [])
       |> Report.show_result_statistics(url)
 
@@ -39,10 +39,5 @@ defmodule WpXmlrpcry.Worker do
       </params>
     </methodCall>
     """
-  end
-
-  def combine_user_pass(user, passwords) when is_binary(user), do: combine_user_pass([user], passwords)
-  def combine_user_pass(users, passwords) do
-    for user <- users, password <- passwords, do: %{username: user, password: password}
   end
 end

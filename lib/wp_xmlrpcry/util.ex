@@ -50,6 +50,11 @@ defmodule WpXmlrpcry.Util do
     end
   end
 
+  def combine_user_pass(user, passwords) when is_binary(user), do: combine_user_pass([user], passwords)
+  def combine_user_pass(users, passwords) do
+    for user <- users, password <- passwords, do: %{username: user, password: password}
+  end
+
   def read_file!(file) do
     try do
       File.stream!(file)
