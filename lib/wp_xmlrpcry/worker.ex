@@ -10,7 +10,7 @@ defmodule WpXmlrpcry.Worker do
       |> do_login(url, [])
       |> Report.show_result_statistics(url)
 
-    send(progress_channel, result)
+    update_progress(progress_channel, result)
   end
 
   def do_login([%{username: user, password: pass} | user_and_pass], url, acc) do
@@ -39,5 +39,9 @@ defmodule WpXmlrpcry.Worker do
       </params>
     </methodCall>
     """
+  end
+
+  def update_progress(progress_channel, result) do
+    send(progress_channel, result)
   end
 end
