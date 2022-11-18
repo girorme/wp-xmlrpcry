@@ -4,53 +4,52 @@ defmodule WpXmlrpcry do
 
   def main(args) do
     args
-    |> parse_args()
-    |> process()
+    |> Util.parse_args()
+    |> start()
   end
 
-  def process(args) do
+  def start(args) do
     IO.puts(Util.banner())
 
-    if args[:help] || missing_main_args(args) do
-      IO.puts(Util.help())
-      System.halt(0)
-    end
+    Util.validate_args(args)
 
-    urls = ["http://localhost:8080/xmlrpc.php"]
-    users = ["admin"]
-    wordlist = ["123456", "admin123@123", "12345640", "awieqwe"]
-    total = Enum.count(urls)
-    progress_channel = Progress.start_progress(finished: 0, total: total)
+    config = %{
+      url_list: nil,
+      userlist: nil,
+      wordlist: nil,
+      progress_channel: nil,
+      default_users: true,
+      default_passwords: true
+    }
 
-    Task.async_stream(
-      urls,
-      &(Worker.start(progress_channel, url: &1, users: users, wordlist: wordlist)),
-      max_concurrency: 200,
-      timeout: :infinity,
-      ordered: false
-    ) |> Stream.run()
+    config
+    |> Util.get_user_preferences(args)
+    |> Util.get_urls(args[:urls])
+    |> Util.get_users(args[:users])
+    |> Util.get_passwords(args[:wordlist])
+    |> start_progress()
+    |> start_workers()
 
     # Collect results and show to user
   end
 
-  defp parse_args(args) do
-    {parsed, _argv, _} = OptionParser.parse(args,
-      switches: [
-        urls: :string,
-        concurrency: :integer,
-        wordlist: :string,
-        users: :string,
-        output: :string,
-        help: :boolean
-      ],
-      aliases: [u: :urls, w: :wordlist, c: :concurrency, h: :help, o: :output]
-    )
-
-    parsed
+  defp start_progress(config) do
+    total = Enum.count(config[:url_list])
+    %{config | progress_channel: Progress.start_progress(finished: 0, total: total)}
   end
 
-  defp missing_main_args(args) do
-    [args[:urls], args[:users], args[:wordlist]]
-    |> Enum.any?(&(is_nil(&1)))
+  defp start_workers(config) do
+    Task.async_stream(
+      config[:url_list],
+      &(Worker.start(
+        config[:progress_channel],
+        url: &1,
+        users: config[:userlist],
+        wordlist: config[:wordlist])
+      ),
+      max_concurrency: 200,
+      timeout: :infinity,
+      ordered: false
+    ) |> Stream.run()
   end
 end

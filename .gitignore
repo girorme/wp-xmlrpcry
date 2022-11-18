@@ -25,7 +25,7 @@ wp_xmlrpcry-*.tar
 # Temporary files, for example, from tests.
 /tmp/
 
-# binary
+# misc
 wpxmlrpcry
-
 wp_xmlrpcry
+urls
