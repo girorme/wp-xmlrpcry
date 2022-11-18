@@ -8,7 +8,10 @@ defmodule WpXmlrpcry.MixProject do
       elixir: "~> 1.13",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      escript: [main_module: WpXmlrpcry]
+      escript: [
+        main_module: WpXmlrpcry,
+        name: "wpxmlrpcry"
+      ]
     ]
   end
 
