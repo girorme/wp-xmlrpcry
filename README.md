@@ -22,5 +22,5 @@ be found at <https://hexdocs.pm/wp_xmlrpcry>.
 TODO
 ---
 
-- [] Add file / stdin url read
-- [] Add show results
+- [ ] Add file / stdin url read
+- [ ] Add show results
