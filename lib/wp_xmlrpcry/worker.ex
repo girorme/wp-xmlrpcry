@@ -5,6 +5,8 @@ defmodule WpXmlrpcry.Worker do
   @pattern ~r/isAdmin/i
 
   def start(progress_channel, [url: url, users: users, wordlist: wordlist]) do
+    url = Util.prepare_url(url)
+
     result =
       Util.combine_user_pass(users, wordlist)
       |> do_login(url, [])

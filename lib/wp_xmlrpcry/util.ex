@@ -24,12 +24,7 @@ defmodule WpXmlrpcry.Util do
   def get_default_users(), do: ["admin"]
   def get_default_passwords() do
     [
-      "admin",
-      "admin123@123",
-      "1234",
-      "123456",
-      "1234567",
-      "12345678"
+    "admin123@123"
     ]
   end
 
@@ -60,6 +55,21 @@ defmodule WpXmlrpcry.Util do
   def combine_user_pass(user, passwords) when is_binary(user), do: combine_user_pass([user], passwords)
   def combine_user_pass(users, passwords) do
     for user <- users, password <- passwords, do: %{username: user, password: password}
+  end
+
+  def prepare_url(url) do
+    url =
+      if String.match?(url, ~r/xmlrpc.php/) do
+        url
+      else
+        "#{url}/xmlrpc.php"
+      end
+
+    if String.match?(url, ~r/http|https/) do
+      url
+    else
+      "https://#{url}"
+    end
   end
 
   def read_file!(file) do
