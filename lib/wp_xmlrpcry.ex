@@ -1,5 +1,5 @@
 defmodule WpXmlrpcry do
-  alias WpXmlrpcry.{Progress, Worker, Util}
+  alias WpXmlrpcry.{Progress, Result, Worker, Util}
   #require Reporter
 
   def main(args) do
@@ -30,7 +30,7 @@ defmodule WpXmlrpcry do
     |> start_progress()
     |> start_workers()
 
-    # Collect results and show to user
+    IO.inspect(Result.get_results())
   end
 
   defp start_progress(config) do

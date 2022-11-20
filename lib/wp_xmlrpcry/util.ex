@@ -23,7 +23,14 @@ defmodule WpXmlrpcry.Util do
 
   def get_default_users(), do: ["admin"]
   def get_default_passwords() do
-    ["admin", "1234", "123456", "1234567", "12345678"]
+    [
+      "admin",
+      "admin123@123",
+      "1234",
+      "123456",
+      "1234567",
+      "12345678"
+    ]
   end
 
   def get_user_preferences(config, _args) do

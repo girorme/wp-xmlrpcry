@@ -1,12 +1,13 @@
 defmodule WpXmlrpcry.Application do
-  # See https://hexdocs.pm/elixir/Application.html
-  # for more information on OTP Applications
   @moduledoc false
   use Application
+
+  alias WpXmlrpcry.Result
 
   @impl true
   def start(_type, _args) do
     children = [
+      Result
     ]
 
     opts = [strategy: :one_for_one, name: WpXmlrpcry.Supervisor]

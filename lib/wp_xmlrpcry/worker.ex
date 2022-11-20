@@ -8,7 +8,7 @@ defmodule WpXmlrpcry.Worker do
     result =
       Util.combine_user_pass(users, wordlist)
       |> do_login(url, [])
-      |> Report.show_result_statistics(url)
+      |> Report.format_result(url)
 
     update_progress(progress_channel, result)
   end

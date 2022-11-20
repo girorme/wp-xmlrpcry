@@ -1,5 +1,5 @@
 defmodule WpXmlrpcry.Report do
-  def show_result_statistics(result, url) do
+  def format_result(result, url) do
     {success, error} = Enum.split_with(result, fn attempt -> attempt[:success] == true end)
 
     %{

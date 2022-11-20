@@ -1,4 +1,6 @@
 defmodule WpXmlrpcry.Progress do
+  alias WpXmlrpcry.Result
+
   def start_progress(finished: finished, total: total) do
     spawn fn -> notify_progress(finished, total) end
   end
@@ -7,8 +9,8 @@ defmodule WpXmlrpcry.Progress do
     ProgressBar.render(finished, total, format())
 
     finished = receive do
-      _url_statistics ->
-        # TODO: send results to centralized "writer of results"
+      url_result ->
+        Result.store_result(url_result)
         finished + 1
     end
 
