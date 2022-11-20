@@ -26,9 +26,9 @@ defmodule WpXmlrpcry.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:poolboy, "~> 1.5"},
       {:progress_bar, "> 0.0.0"},
-      {:httpoison, "~> 1.8"}
+      {:httpoison, "~> 1.8"},
+      {:scribe, "~> 0.10"}
     ]
   end
 end

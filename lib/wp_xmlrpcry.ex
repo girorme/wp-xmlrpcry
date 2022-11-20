@@ -1,4 +1,5 @@
 defmodule WpXmlrpcry do
+  alias WpXmlrpcry.Report
   alias WpXmlrpcry.{Progress, Result, Worker, Util}
   #require Reporter
 
@@ -22,6 +23,8 @@ defmodule WpXmlrpcry do
       default_passwords: true
     }
 
+    start_time = DateTime.utc_now()
+
     config
     |> Util.get_user_preferences(args)
     |> Util.get_urls(args[:urls])
@@ -30,7 +33,11 @@ defmodule WpXmlrpcry do
     |> start_progress()
     |> start_workers()
 
-    IO.inspect(Result.get_results())
+    total_time =
+      DateTime.diff(DateTime.utc_now(), start_time)
+      |> Util.sec_to_str()
+
+    Report.get_results_in_table(Result.get_results(), time_lapsed: total_time)
   end
 
   defp start_progress(config) do

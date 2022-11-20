@@ -1,4 +1,10 @@
 defmodule WpXmlrpcry.Util do
+  @minute 60
+  @hour   @minute*60
+  @day    @hour*24
+  @week   @day*7
+  @divisor [@week, @day, @hour, @minute, 1]
+
   def banner() do
     """
     █░█░█ █▀█ ▀▄▀ █▀▄▀█ █░░ █▀█ █▀█ █▀▀ █▀█ █▄█
@@ -24,7 +30,10 @@ defmodule WpXmlrpcry.Util do
   def get_default_users(), do: ["admin"]
   def get_default_passwords() do
     [
-    "admin123@123"
+      "admin",
+      "123456",
+      "admin123@123",
+      "123457"
     ]
   end
 
@@ -108,6 +117,20 @@ defmodule WpXmlrpcry.Util do
     if args[:help] || missing_main_args(args) do
       IO.puts(help())
       System.halt(0)
+    end
+  end
+
+  def sec_to_str(sec) do
+    if sec == 0 do
+      "< 1 sec"
+    else
+      {_, [s, m, h, d, w]} =
+          Enum.reduce(@divisor, {sec,[]}, fn divisor,{n,acc} ->
+            {rem(n,divisor), [div(n,divisor) | acc]}
+          end)
+      ["#{w} wk", "#{d} d", "#{h} hours", "#{m} minutes", "#{s} seconds"]
+      |> Enum.reject(fn str -> String.starts_with?(str, "0") end)
+      |> Enum.join(", ")
     end
   end
 end
