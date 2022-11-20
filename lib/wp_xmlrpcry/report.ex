@@ -11,10 +11,14 @@ defmodule WpXmlrpcry.Report do
   end
 
   def get_results_in_table(results, opts) do
-    {total_success, total_cred_tries} = Enum.reduce(results, {0, 0}, fn
-      %{credentials_found?: true, total_tries: tries}, {total_success, total_cred_tries} -> {total_success + 1, total_cred_tries + tries}
-      %{total_tries: tries}, {total_success, total_cred_tries} -> {total_success, total_cred_tries + tries}
-    end)
+    {total_success, total_cred_tries} =
+      Enum.reduce(results, {0, 0}, fn
+        %{credentials_found?: true, total_tries: tries}, {total_success, total_cred_tries} ->
+          {total_success + 1, total_cred_tries + tries}
+
+        %{total_tries: tries}, {total_success, total_cred_tries} ->
+          {total_success, total_cred_tries + tries}
+      end)
 
     formatted_result = %{
       creds_found: total_success,

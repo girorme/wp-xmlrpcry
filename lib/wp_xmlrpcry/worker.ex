@@ -1,10 +1,9 @@
 defmodule WpXmlrpcry.Worker do
-
   alias WpXmlrpcry.{Http, Report, Util}
 
   @pattern ~r/isAdmin/i
 
-  def start(progress_channel, [url: url, users: users, wordlist: wordlist]) do
+  def start(progress_channel, url: url, users: users, wordlist: wordlist) do
     url = Util.prepare_url(url)
 
     result =
@@ -18,10 +17,10 @@ defmodule WpXmlrpcry.Worker do
   def do_login([%{username: user, password: pass} | user_and_pass], url, acc) do
     ret =
       with payload <- generate_payload(username: user, password: pass),
-        {:ok, response} <- Http.post(url, payload),
-        parsed_body <- Http.extract_body(response),
-        true <- Http.text_in_body?(parsed_body, @pattern) do
-          %{username: user, password: pass, success: true}
+           {:ok, response} <- Http.post(url, payload),
+           parsed_body <- Http.extract_body(response),
+           true <- Http.text_in_body?(parsed_body, @pattern) do
+        %{username: user, password: pass, success: true}
       else
         _ ->
           %{username: user, password: pass, success: false}
@@ -29,6 +28,7 @@ defmodule WpXmlrpcry.Worker do
 
     do_login(user_and_pass, url, [ret | acc])
   end
+
   def do_login([], _url, acc), do: acc
 
   def generate_payload(username: u, password: p) do

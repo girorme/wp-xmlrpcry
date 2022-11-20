@@ -1,10 +1,4 @@
 defmodule WpXmlrpcry.Util do
-  @minute 60
-  @hour   @minute*60
-  @day    @hour*24
-  @week   @day*7
-  @divisor [@week, @day, @hour, @minute, 1]
-
   def banner() do
     """
     █░█░█ █▀█ ▀▄▀ █▀▄▀█ █░░ █▀█ █▀█ █▀▀ █▀█ █▄█
@@ -28,6 +22,7 @@ defmodule WpXmlrpcry.Util do
   end
 
   def get_default_users(), do: ["admin"]
+
   def get_default_passwords() do
     [
       "admin",
@@ -61,7 +56,9 @@ defmodule WpXmlrpcry.Util do
     end
   end
 
-  def combine_user_pass(user, passwords) when is_binary(user), do: combine_user_pass([user], passwords)
+  def combine_user_pass(user, passwords) when is_binary(user),
+    do: combine_user_pass([user], passwords)
+
   def combine_user_pass(users, passwords) do
     for user <- users, password <- passwords, do: %{username: user, password: password}
   end
@@ -93,44 +90,31 @@ defmodule WpXmlrpcry.Util do
   end
 
   def parse_args(args) do
-    {parsed, _argv, _} = OptionParser.parse(args,
-      switches: [
-        urls: :string,
-        concurrency: :integer,
-        wordlist: :string,
-        users: :string,
-        output: :string,
-        help: :boolean
-      ],
-      aliases: [u: :urls, w: :wordlist, c: :concurrency, h: :help, o: :output]
-    )
+    {parsed, _argv, _} =
+      OptionParser.parse(args,
+        switches: [
+          urls: :string,
+          concurrency: :integer,
+          wordlist: :string,
+          users: :string,
+          output: :string,
+          help: :boolean
+        ],
+        aliases: [u: :urls, w: :wordlist, c: :concurrency, h: :help, o: :output]
+      )
 
     parsed
   end
 
   def missing_main_args(args) do
     [args[:urls], args[:users], args[:wordlist]]
-    |> Enum.any?(&(is_nil(&1)))
+    |> Enum.any?(&is_nil(&1))
   end
 
   def validate_args(args) do
     if args[:help] || missing_main_args(args) do
       IO.puts(help())
       System.halt(0)
-    end
-  end
-
-  def sec_to_str(sec) do
-    if sec == 0 do
-      "< 1 sec"
-    else
-      {_, [s, m, h, d, w]} =
-          Enum.reduce(@divisor, {sec,[]}, fn divisor,{n,acc} ->
-            {rem(n,divisor), [div(n,divisor) | acc]}
-          end)
-      ["#{w} wk", "#{d} d", "#{h} hours", "#{m} minutes", "#{s} seconds"]
-      |> Enum.reject(fn str -> String.starts_with?(str, "0") end)
-      |> Enum.join(", ")
     end
   end
 end

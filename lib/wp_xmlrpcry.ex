@@ -1,7 +1,6 @@
 defmodule WpXmlrpcry do
   alias WpXmlrpcry.Report
-  alias WpXmlrpcry.{Progress, Result, Worker, Util}
-  #require Reporter
+  alias WpXmlrpcry.{Progress, Result, TimeUtils, Worker, Util}
 
   def main(args) do
     args
@@ -35,7 +34,7 @@ defmodule WpXmlrpcry do
 
     total_time =
       DateTime.diff(DateTime.utc_now(), start_time)
-      |> Util.sec_to_str()
+      |> TimeUtils.sec_to_str()
 
     Report.get_results_in_table(Result.get_results(), time_lapsed: total_time)
   end
@@ -48,15 +47,16 @@ defmodule WpXmlrpcry do
   defp start_workers(config) do
     Task.async_stream(
       config[:url_list],
-      &(Worker.start(
+      &Worker.start(
         config[:progress_channel],
         url: &1,
         users: config[:userlist],
-        wordlist: config[:wordlist])
+        wordlist: config[:wordlist]
       ),
       max_concurrency: 200,
       timeout: :infinity,
       ordered: false
-    ) |> Stream.run()
+    )
+    |> Stream.run()
   end
 end
