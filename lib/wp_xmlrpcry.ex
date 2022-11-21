@@ -36,9 +36,31 @@ defmodule WpXmlrpcry do
       DateTime.diff(DateTime.utc_now(), start_time)
       |> TimeUtils.sec_to_str()
 
-    Report.get_results_in_table(Result.get_results(),
-      time_lapsed: total_time,
-      output: args[:output]
+    final_report =
+      Report.get_results(Result.get_results(),
+        time_lapsed: total_time,
+        output: args[:output]
+      )
+
+    TableRex.quick_render!(
+      [Map.values(final_report[:statistics])],
+      Map.keys(final_report[:statistics]),
+      "Results"
+    )
+    |> IO.puts()
+
+    cred_flat = Enum.map(final_report[:credentials_info], fn x -> [x[:url], x[:credentials]] end)
+
+    final_result =
+      TableRex.quick_render!(
+        cred_flat,
+        ["url", "credentials"],
+        "Results"
+      )
+
+    Report.save_results_to_file(
+      final_result,
+      args[:output]
     )
 
     IO.puts("Results writen to: #{args[:output]}")

@@ -28,7 +28,8 @@ defmodule WpXmlrpcry.MixProject do
     [
       {:progress_bar, "> 0.0.0"},
       {:httpoison, "~> 1.8"},
-      {:scribe, "~> 0.10"}
+      {:scribe, "~> 0.10"},
+      {:table_rex, "~> 3.1.1"}
     ]
   end
 end

@@ -10,7 +10,7 @@ defmodule WpXmlrpcry.Report do
     }
   end
 
-  def get_results_in_table(results, opts) do
+  def get_results(results, opts) do
     {total_success, total_cred_tries} =
       Enum.reduce(results, {0, 0}, fn
         %{credentials_found?: true, total_tries: tries}, {total_success, total_cred_tries} ->
@@ -20,14 +20,33 @@ defmodule WpXmlrpcry.Report do
           {total_success, total_cred_tries + tries}
       end)
 
-    Scribe.print(
-      %{
-        creds_found: total_success,
-        usr_pw_tries: total_cred_tries,
-        output: opts[:output],
-        time: opts[:time_lapsed]
-      },
-      colorize: true
-    )
+    statistics = %{
+      "creds_found" => Integer.to_string(total_success),
+      "usr_pw_tries" => Integer.to_string(total_cred_tries),
+      "output" => opts[:output],
+      "time" => opts[:time_lapsed]
+    }
+
+    credentials_info =
+      Enum.reduce(results, [], fn
+        url_info = %{credentials_found?: true}, acc ->
+          cred = List.first(url_info[:credentials])
+
+          url =
+            Map.new()
+            |> Map.put(:url, url_info[:url])
+            |> Map.put(:credentials, "#{cred[:username]}:#{cred[:password]}")
+
+          [url | acc]
+      end)
+
+    %{
+      statistics: statistics,
+      credentials_info: credentials_info
+    }
+  end
+
+  def save_results_to_file(results, file) do
+    File.write(file, results)
   end
 end

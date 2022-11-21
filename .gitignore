@@ -28,3 +28,5 @@ wp_xmlrpcry-*.tar
 # misc
 wpxmlrpcry
 urls
+output.txt
+output
