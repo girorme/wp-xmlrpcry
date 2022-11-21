@@ -36,7 +36,12 @@ defmodule WpXmlrpcry do
       DateTime.diff(DateTime.utc_now(), start_time)
       |> TimeUtils.sec_to_str()
 
-    Report.get_results_in_table(Result.get_results(), time_lapsed: total_time)
+    Report.get_results_in_table(Result.get_results(),
+      time_lapsed: total_time,
+      output: args[:output]
+    )
+
+    IO.puts("Results writen to: #{args[:output]}")
   end
 
   defp start_progress(config) do

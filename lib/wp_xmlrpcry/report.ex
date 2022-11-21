@@ -20,19 +20,14 @@ defmodule WpXmlrpcry.Report do
           {total_success, total_cred_tries + tries}
       end)
 
-    formatted_result = %{
-      creds_found: total_success,
-      usr_pw_tries: total_cred_tries,
-      output: ""
-    }
-
-    formatted_result =
-      if opts[:time_lapsed] do
-        Map.put(formatted_result, :time, opts[:time_lapsed])
-      else
-        formatted_result
-      end
-
-    Scribe.print(formatted_result, colorize: true)
+    Scribe.print(
+      %{
+        creds_found: total_success,
+        usr_pw_tries: total_cred_tries,
+        output: opts[:output],
+        time: opts[:time_lapsed]
+      },
+      colorize: true
+    )
   end
 end
