@@ -1,26 +1,18 @@
-# WpXmlrpcry
+![logo](assets/wp-logo.png)
 
-**TODO: Add description**
+___
 
-## Installation
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `wp_xmlrpcry` to your list of dependencies in `mix.exs`:
-
-```elixir
-def deps do
-  [
-    {:wp_xmlrpcry, "~> 0.1.0"}
-  ]
-end
 ```
+  Usage:
+    wp_xmlrpcry [options]
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/wp_xmlrpcry>.
+    Example: wp_xmlrpcry -l url_list.txt -w wordlist.txt -c workers_qty -o output
+  Options:
+    -h  --help             Print help (this message)
+    -u  --url-list         File containing urls
+    -ul --userlist         File containing users
+    -w  --wordlist         File containing one password per line
+    -c  --concurrency      Number of workers to spawn. Default: 1.
+    -o  --output           File to write to
 
-TODO
----
-
-- [ ] Add file / stdin url read
-- [ ] Add show results
+```
