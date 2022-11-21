@@ -16,3 +16,6 @@ ___
     -o  --output           File to write to
 
 ```
+
+### Todo
+- [ ] improve: return to result more than one credentials found
