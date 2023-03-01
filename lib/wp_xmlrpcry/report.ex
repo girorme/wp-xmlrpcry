@@ -29,15 +29,19 @@ defmodule WpXmlrpcry.Report do
 
     credentials_info =
       Enum.reduce(results, [], fn
-        url_info = %{credentials_found?: true}, acc ->
-          cred = List.first(url_info[:credentials])
+        url_info = %{credentials_found?: cred_found}, acc ->
+          unless cred_found do
+            acc
+          else
+            cred = List.first(url_info[:credentials])
 
-          url =
-            Map.new()
-            |> Map.put(:url, url_info[:url])
-            |> Map.put(:credentials, "#{cred[:username]}:#{cred[:password]}")
+            url =
+              Map.new()
+              |> Map.put(:url, url_info[:url])
+              |> Map.put(:credentials, "#{cred[:username]}:#{cred[:password]}")
 
-          [url | acc]
+            [url | acc]
+          end
       end)
 
     %{
