@@ -106,10 +106,7 @@ defmodule WpXmlrpcry.Util do
     parsed
   end
 
-  def missing_main_args(args) do
-    [args[:urls], args[:users], args[:wordlist]]
-    |> Enum.any?(&is_nil(&1))
-  end
+  def missing_main_args(args), do: is_nil(args[:urls])
 
   def validate_args(args) do
     if args[:help] || missing_main_args(args) do
