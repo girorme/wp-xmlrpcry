@@ -10,7 +10,7 @@ defmodule WpXmlrpcry.MixProject do
       deps: deps(),
       escript: [
         main_module: WpXmlrpcry,
-        name: "wpxmlrpcry"
+        path: "bin/wpxmlrpcry"
       ]
     ]
   end

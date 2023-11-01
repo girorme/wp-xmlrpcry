@@ -2,6 +2,15 @@
 
 ___
 
+### Usage
+
+#### Compile
+---
+> mix escript.build
+
+The command above gnerates a binary inside `bin/` folder
+
+#### Help
 ```
   Usage:
     wp_xmlrpcry [options]
