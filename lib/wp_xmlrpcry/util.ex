@@ -32,7 +32,27 @@ defmodule WpXmlrpcry.Util do
     ]
   end
 
-  def get_user_preferences(config, _args) do
+  def get_user_preferences(config, args) do
+    # check if user supplied user list
+    config =
+      case args[:users] do
+        nil ->
+          config
+
+        _ ->
+          %{config | default_users: false}
+      end
+
+    # check if user supplied wordlist
+    config =
+      case args[:wordlist] do
+        nil ->
+          config
+
+        _ ->
+          %{config | default_passwords: false}
+      end
+
     config
   end
 
