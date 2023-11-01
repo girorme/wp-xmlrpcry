@@ -28,6 +28,11 @@ wp_xmlrpcry-*.tar
 # misc
 wpxmlrpcry
 urls
+urls.txt
+users
+users.txt
 output.txt
+wordlist.txt
+wordlist
 output
 bin/wpxmlrpcry
