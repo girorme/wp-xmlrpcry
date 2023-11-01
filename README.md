@@ -27,4 +27,5 @@ The command above gnerates a binary inside `bin/` folder
 ```
 
 ### Todo
+- [ ] improve: add file validation in args
 - [ ] improve: return to result more than one credentials found
