@@ -49,21 +49,9 @@ defmodule WpXmlrpcry do
     )
     |> IO.puts()
 
-    cred_flat = Enum.map(final_report[:credentials_info], fn x -> [x[:url], x[:credentials]] end)
-
-    final_result =
-      TableRex.quick_render!(
-        cred_flat,
-        ["url", "credentials"],
-        "Results"
-      )
-
-    Report.save_results_to_file(
-      final_result,
-      args[:output]
-    )
-
-    IO.puts("Results writen to: #{args[:output]}")
+    final_report
+    |> prepare_content_to_save()
+    |> save_report_to_file(args[:output])
   end
 
   defp start_progress(config) do
@@ -85,5 +73,28 @@ defmodule WpXmlrpcry do
       ordered: false
     )
     |> Stream.run()
+  end
+
+  def prepare_content_to_save(_final_report = %{credentials_info: []}), do: nil
+
+  def prepare_content_to_save(final_report) do
+    cred_flat = Enum.map(final_report[:credentials_info], fn x -> [x[:url], x[:credentials]] end)
+
+    TableRex.quick_render!(
+      cred_flat,
+      ["url", "credentials"],
+      "Results"
+    )
+  end
+
+  def save_report_to_file(nil, _output), do: nil
+
+  def save_report_to_file(content, output) do
+    Report.save_results_to_file(
+      content,
+      output
+    )
+
+    IO.puts("Results writen to: #{output}")
   end
 end
