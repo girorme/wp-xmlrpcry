@@ -13,8 +13,13 @@ defmodule WpXmlrpcry.Report do
   def get_results(results, opts) do
     {total_success, total_cred_tries} =
       Enum.reduce(results, {0, 0}, fn
-        %{credentials_found?: true, total_tries: tries}, {total_success, total_cred_tries} ->
-          {total_success + 1, total_cred_tries + tries}
+        %{
+          credentials_found?: true,
+          total_tries: tries,
+          credentials: credentials
+        },
+        {total_success, total_cred_tries} ->
+          {total_success + Enum.count(credentials), total_cred_tries + tries}
 
         %{total_tries: tries}, {total_success, total_cred_tries} ->
           {total_success, total_cred_tries + tries}
@@ -29,18 +34,19 @@ defmodule WpXmlrpcry.Report do
 
     credentials_info =
       Enum.reduce(results, [], fn
-        url_info = %{credentials_found?: cred_found}, acc ->
+        urls_info = %{credentials_found?: cred_found}, acc ->
           unless cred_found do
             acc
           else
-            cred = List.first(url_info[:credentials])
+            results_parsed =
+              Enum.map(urls_info[:credentials], fn cred ->
+                %{
+                  url: urls_info[:url],
+                  credentials: "#{cred[:username]}:#{cred[:password]}"
+                }
+              end)
 
-            url =
-              Map.new()
-              |> Map.put(:url, url_info[:url])
-              |> Map.put(:credentials, "#{cred[:username]}:#{cred[:password]}")
-
-            [url | acc]
+            results_parsed ++ acc
           end
       end)
 
