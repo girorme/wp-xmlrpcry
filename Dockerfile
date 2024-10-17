@@ -22,6 +22,7 @@ FROM elixir:1.14-alpine
 WORKDIR /app/bin
 
 RUN mkdir -p /app/bin/output && chmod 777 /app/bin/output
+RUN mkdir -p /app/bin/input && chmod 777 /app/bin/input
 
 # Copy from builder stage
 COPY --from=builder /app/bin/wpxmlrpcry /app/bin/wpxmlrpcry
