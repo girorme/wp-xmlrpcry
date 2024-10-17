@@ -4,16 +4,10 @@
 
 WP-XMLRPCry is a powerful WordPress XML-RPC brute-force tool. It's designed to test the security of WordPress websites by attempting to log in with a list of usernames and passwords.
 
-### Compilation
-
 Requirements:
-- Elixir > 1.13
+- Docker
 
-To compile the tool, run the following command:
-
-> mix escript.build
-
-This command generates a binary executable inside the bin/ folder.
+_or elixir 1.14 locally to run in your host machine instead of docker_
 
 ### How to Use
 You can use WP-XMLRPCry with various options to perform a WordPress XML-RPC brute-force attack. Here are the available options:
@@ -32,6 +26,34 @@ Options:
   -w  --wordlist       File containing one password per line
   -c  --concurrency    Number of workers to spawn (default: 1)
   -o  --output         File to write the results
+```
+
+### Run via docker
+
+Build the image
+```
+$ docker build -t wpxmlrpcry .
+```
+
+Run it via the `wpxmlrpcry` script:
+```
+./wpxmlrpcry -u urls.txt -o output.txt
+```
+
+_Here you can use the parameters than you need_
+
+### Run locally using elixir
+
+To compile the tool, run the following command:
+
+```
+$ mix escript.build
+```
+
+This command generates a binary executable inside the bin/ folder, so after the build you can run the tool:
+
+```
+$ ./bin/wpxmlrpcry args...
 ```
 
 ### Disclaimer

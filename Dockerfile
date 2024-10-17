@@ -19,10 +19,9 @@ RUN mix local.rebar --force \
 FROM elixir:1.14-alpine
 
 # Set the working directory inside the container
-WORKDIR /app
+WORKDIR /app/bin
 
-RUN mkdir output/
-RUN chmod 777 output/
+RUN mkdir -p /app/bin/output && chmod 777 /app/bin/output
 
 # Copy from builder stage
 COPY --from=builder /app/bin/wpxmlrpcry /app/bin/wpxmlrpcry

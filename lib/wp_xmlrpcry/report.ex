@@ -57,6 +57,6 @@ defmodule WpXmlrpcry.Report do
   end
 
   def save_results_to_file(results, file) do
-    File.write(file, results)
+    File.write("output/#{file}", results)
   end
 end
