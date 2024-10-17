@@ -40,6 +40,8 @@ Run it via the `wpxmlrpcry` script:
 ./wpxmlrpcry -u urls.txt -o output.txt
 ```
 
+> The files must be in the `input` directory
+
 _Here you can use the parameters than you need_
 
 ### Run locally using elixir

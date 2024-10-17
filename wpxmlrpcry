@@ -31,9 +31,12 @@ if [[ "$1" == "--update" ]]; then
     exit 0
 fi
 
-# creat output dir if not exists
 if [ ! -d "output" ]; then
     mkdir output
+fi
+
+if [ ! -d "input" ]; then
+    mkdir input
 fi
 
 echo -e "${YELLOW}Launching wpxmlrpcry via docker${NC}"
