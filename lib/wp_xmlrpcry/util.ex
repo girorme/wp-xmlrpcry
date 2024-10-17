@@ -84,13 +84,20 @@ defmodule WpXmlrpcry.Util do
   end
 
   def prepare_url(url) do
-    url =
-      if String.match?(url, ~r/xmlrpc.php/) do
-        url
-      else
-        "#{url}/xmlrpc.php"
-      end
+    url
+    |> check_xmlrpc_path()
+    |> check_https()
+  end
 
+  def check_xmlrpc_path(url) do
+    if String.match?(url, ~r/xmlrpc.php/) do
+      url
+    else
+      "#{url}/xmlrpc.php"
+    end
+  end
+
+  def check_https(url) do
     if String.match?(url, ~r/http|https/) do
       url
     else
