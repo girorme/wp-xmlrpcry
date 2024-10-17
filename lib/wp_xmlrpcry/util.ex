@@ -107,7 +107,7 @@ defmodule WpXmlrpcry.Util do
 
   def read_file!(file) do
     try do
-      File.stream!(file)
+      File.stream!("input/#{file}")
       |> Stream.flat_map(&String.split/1)
       |> Stream.uniq()
       |> Enum.to_list()

@@ -31,11 +31,14 @@ if [[ "$1" == "--update" ]]; then
     exit 0
 fi
 
-# creat output dir if not exists
 if [ ! -d "output" ]; then
     mkdir output
 fi
 
+if [ ! -d "input" ]; then
+    mkdir input
+fi
+
 echo -e "${YELLOW}Launching wpxmlrpcry via docker${NC}"
-docker run --name wpxmlrpcry --rm -v "$(pwd)/output:/app/bin/output" -v "$(pwd)/urls.txt":/app/bin/urls.txt $DOCKER_IMAGE "$@"
+docker run --name wpxmlrpcry --rm -v "$(pwd)/output:/app/bin/output" -v "$(pwd)/input":/app/bin/input $DOCKER_IMAGE "$@"
 echo -e "${GREEN}wpxmlrpcry execution completed.${NC}"
