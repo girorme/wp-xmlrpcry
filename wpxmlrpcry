@@ -1,0 +1,41 @@
+#!/bin/bash
+
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+#DOCKER_IMAGE="ghcr.io/girorme/wpxmlrpcry:latest"
+DOCKER_IMAGE="wpxmlrpcry"
+
+# Build binoculo locally (needs elixir >= 1.14)
+build_tool() {
+    echo -e "${YELLOW}Building wpxmlrpcry...${NC}"
+    # Perform the build process here
+    MIX_ENV=prod mix escript.build
+    echo -e "${GREEN}wpxmlrpcry build complete.${NC}"
+}
+
+update() {
+    echo -e "${YELLOW}Updating wpxmlrpcry...${NC}"
+    docker pull $DOCKER_IMAGE
+    echo -e "${GREEN}wpxmlrpcry updated.${NC}"
+}
+
+if [[ "$1" == "-b" ]]; then
+    build_tool
+    exit 0
+fi
+
+if [[ "$1" == "--update" ]]; then
+    update
+    exit 0
+fi
+
+# creat output dir if not exists
+if [ ! -d "output" ]; then
+    mkdir output
+fi
+
+echo -e "${YELLOW}Launching wpxmlrpcry via docker${NC}"
+docker run --name wpxmlrpcry --rm -v "$(pwd)/output:/app/bin/output" -v "$(pwd)/urls.txt":/app/bin/urls.txt $DOCKER_IMAGE "$@"
+echo -e "${GREEN}wpxmlrpcry execution completed.${NC}"

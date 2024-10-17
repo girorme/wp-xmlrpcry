@@ -26,7 +26,6 @@ wp_xmlrpcry-*.tar
 /tmp/
 
 # misc
-wpxmlrpcry
 urls
 urls.txt
 users
